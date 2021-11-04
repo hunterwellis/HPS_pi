@@ -137,6 +137,10 @@ while True:
     RPM_value = ttk.Label(root, text=rpmA, style='.TLabel').place(x=20, y=410, anchor='w')
 
 
+    # heading elements
+    heading_x = int(scalenum.get())
+    heading_y = int(scalenum.get())
+    heading_canvas.coords(heading_arrow, 150, 125, heading_x, heading_y)
     time.sleep(0.01)
     root.update()
 
