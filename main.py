@@ -3,6 +3,17 @@ import time
 from tkinter import *
 from tkinter import ttk
 
+
+#####
+# test scale
+#####
+test = Tk()
+test.title('Test')
+scalenum=DoubleVar()
+test_scale = Scale(test, from_=0, to=400, length=140, orient=VERTICAL, variable=scalenum).pack()
+
+
+
 # gpio.setmod(gpio.BCM)
 
 # dataINA = int() # Proximity sensor input A (PSA)
@@ -46,7 +57,7 @@ rpmA = int() # RPM from sensor A value
 ########################################################################################################################
 # DEPTH SENSOR
 ########################################################################################################################
-depth = 0
+depth =int(0)
 ########################################################################################################################
 # HUD
 ########################################################################################################################
@@ -55,10 +66,6 @@ depth = 0
 root = Tk()  # initialize root variable
 root.geometry("800x480")  # root sized to hdmi monitor
 root.title('Nautilus HUD')
-icon = PhotoImage(file='NautilusLogo.png')
-root.iconphoto(True, icon)
-watermark = icon.subsample(4, 4)
-ttk.Label(image=watermark).place(x=20, y=20)
 
 
 # STYLE CONFIGURATION
@@ -86,18 +93,18 @@ heading_canvas = Canvas(root, height=250, width=300)
 heading_canvas.create_oval(25, 3, 275, 250, width='3')
 heading_canvas.create_line(25, 125, 275, 125, width='3')
 heading_canvas.create_line(150, 0, 150, 250, width='3')
-heading_arrow = heading_canvas.create_line(150, 125, 150, 0, fill='#E87722', width='5',arrow='last')
+heading_arrow = heading_canvas.create_line(150, 125, 150, 0, fill='#FFCC00', width='5',arrow='last')
 heading_canvas.grid(column=0, row=1)
 
 # DEPTH DISPLAY
 depth_label = ttk.Label(root, text='DEPTH', style='title.TLabel').grid(column=1, row=0, sticky='n')
-depth_value = ttk.Label(root, text=depth, style='.TLabel').place(x=730, y=25, anchor='n')
+depth_value = ttk.Label(root, text=str(depth), style='.TLabel').place(x=730, y=25, anchor='n')
 
 # canvas items
 depth_canvas = Canvas(root, height=400, width=100)
 depth_canvas.create_rectangle(3, 400, 100, 3, width='3')
 depth_canvas.grid(column=1, row=1, rowspan=2)
-depth_bar = depth_canvas.create_rectangle(3, 400, 100, 120, fill='#861F41') #int value 120 should be replaced with depth value
+depth_bar = depth_canvas.create_rectangle(3, 400, 100, depth, fill='#FFCC00')
 
 # RPM DISPlAY
 RPM_label = ttk.Label(root, text='RPM', style='title.TLabel').grid(column=0, row=2, sticky="nw")
@@ -107,7 +114,7 @@ RPM_value = ttk.Label(root, text=rpmA, style='.TLabel').place(x=20, y=410, ancho
 # canvas items
 RPM_canvas = Canvas(root, height=100, width=550)
 RPM_canvas.create_rectangle(550, 3, 3, 100, width='3')
-RPM_bar = RPM_canvas.create_rectangle(250, 3, 3, 100, fill='#861F41') #int value 250 should be replaced for rpm sensor out of total range
+RPM_bar = RPM_canvas.create_rectangle(250, 3, 3, 100, fill='#FFCC00') #int value 250 should be replaced for rpm sensor out of total range
 RPM_canvas.grid(column=0, row=2)
 
 # USED TO EDIT THE ARROW POSITION
@@ -116,5 +123,24 @@ RPM_canvas.grid(column=0, row=2)
 #root.update()
 #time.sleep(1)
 
+
+
+while True:
+    # depth elements
+    depth = int(scalenum.get())
+    depth_canvas.coords(depth_bar, 3, 400, 100, depth)
+    depth_value = ttk.Label(root, text=str(depth), style='.TLabel').place(x=730, y=25, anchor='n')
+
+    # rpm elements
+    rpmA = int(scalenum.get())
+    RPM_canvas.coords(RPM_bar, rpmA, 3, 3, 100)
+    RPM_value = ttk.Label(root, text=rpmA, style='.TLabel').place(x=20, y=410, anchor='w')
+
+
+    time.sleep(0.01)
+    root.update()
+
+
 root.mainloop()  # run hud
+test.mainloop()
 
